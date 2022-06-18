@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.udacity.salesinvoiceapp;
+package com.udacity.salesinvoiceapp.view;
 
+import com.udacity.salesinvoiceapp.model.InvoiceLine;
+import com.udacity.salesinvoiceapp.model.InvoiceHeader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,8 +18,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.CellEditor;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -28,18 +33,10 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Bassam
  */
-public class SalesApp extends javax.swing.JFrame {
+public class SalesAppView extends javax.swing.JFrame {
 
-    public SalesApp() {
+    public SalesAppView() {
         initComponents();
-
-        tableInvoices.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                showSelectedInvoice();
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -71,8 +68,8 @@ public class SalesApp extends javax.swing.JFrame {
         textFieldInvoiceNumber = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        loadMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
+        menuItemLoad = new javax.swing.JMenuItem();
+        menuItemSave = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,18 +98,8 @@ public class SalesApp extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tableInvoices);
 
         buttonCreateInvoice.setText("Create New Invoice");
-        buttonCreateInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCreateInvoiceActionPerformed(evt);
-            }
-        });
 
         buttonDeleteInvoice.setText("Delete Invoice");
-        buttonDeleteInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDeleteInvoiceActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout panelLeftLayout = new javax.swing.GroupLayout(panelLeft);
         panelLeft.setLayout(panelLeftLayout);
@@ -171,19 +158,9 @@ public class SalesApp extends javax.swing.JFrame {
 
         buttonAddItem.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         buttonAddItem.setText("Add Item");
-        buttonAddItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAddItemActionPerformed(evt);
-            }
-        });
 
         buttonRemoveItem.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         buttonRemoveItem.setText("Remove Item");
-        buttonRemoveItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonRemoveItemActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout panelInvoiceItemsLayout = new javax.swing.GroupLayout(panelInvoiceItems);
         panelInvoiceItems.setLayout(panelInvoiceItemsLayout);
@@ -220,18 +197,8 @@ public class SalesApp extends javax.swing.JFrame {
         jLabel4.setText("Invoice Total");
 
         buttonSave.setText("Save");
-        buttonSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSaveActionPerformed(evt);
-            }
-        });
 
         buttonCancel.setText("Cancel");
-        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCancelActionPerformed(evt);
-            }
-        });
 
         textFieldInvoiceTotal.setEditable(false);
         textFieldInvoiceTotal.setBorder(null);
@@ -321,21 +288,11 @@ public class SalesApp extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        loadMenuItem.setText("Load");
-        loadMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(loadMenuItem);
+        menuItemLoad.setText("Load");
+        jMenu1.add(menuItemLoad);
 
-        saveMenuItem.setText("Save");
-        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(saveMenuItem);
+        menuItemSave.setText("Save");
+        jMenu1.add(menuItemSave);
 
         jMenuBar1.add(jMenu1);
 
@@ -361,248 +318,89 @@ public class SalesApp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonDeleteInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteInvoiceActionPerformed
-        int rowIndex = tableInvoices.getSelectedRow();
-        if (rowIndex != -1) {
-            String invoiceNumber = (String) tableInvoices.getModel().getValueAt(rowIndex, 0);
-            DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
-            invoiceHeaders.remove(invoiceNumber);
-            dtm.removeRow(rowIndex);
+    public void showMessageDialog(String msg) {
+        JOptionPane.showMessageDialog(rootPane, msg);
+    }
 
-            textFieldInvoiceNumber.setText("");
-            textFieldInvoiceDate.setText("");
-            textFieldCustomer.setText("");
-            textFieldInvoiceTotal.setText("");
-            ((DefaultTableModel) tableInvoiceItems.getModel()).setRowCount(0);
-
-            JOptionPane.showMessageDialog(rootPane, "Invoice Deleted Successfuly");
-        }
-    }//GEN-LAST:event_buttonDeleteInvoiceActionPerformed
-
-    private void loadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMenuItemActionPerformed
-
+    public String chooseFileToOpen() throws IOException {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.csv", "csv");
         JFileChooser fc = new JFileChooser();
         fc.setFileFilter(filter);
 
-        JOptionPane.showMessageDialog(rootPane, "Choose Invoice Header File");
         int response = fc.showOpenDialog(rootPane);
         if (response != JFileChooser.APPROVE_OPTION) {
-            return;
+            return null;
         }
-        String invoicesPath = fc.getSelectedFile().getAbsolutePath();
+        return fc.getSelectedFile().getAbsolutePath();
+    }
 
-        JOptionPane.showMessageDialog(rootPane, "Choose Invoice Line File");
-        int response2 = fc.showOpenDialog(rootPane);
-        if (response2 != JFileChooser.APPROVE_OPTION) {
-            return;
+    public String chooseFileToSave() throws IOException {
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.csv", "csv");
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(filter);
+
+        int response = fc.showSaveDialog(rootPane);
+        if (response != JFileChooser.APPROVE_OPTION) {
+            return null;
         }
-        String invoicesItemsPath = fc.getSelectedFile().getAbsolutePath();
+        return fc.getSelectedFile().getCanonicalPath();
+    }
 
-        // read csv file
-        String line = "";
-        String splitBy = ",";
+    public void createInvoicesTable(Map<String, InvoiceHeader> invoiceHeaders, ArrayList<InvoiceLine> invoiceLines) {
+        DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
+        dtm.setRowCount(0);
 
-        invoiceHeaders.clear();
-        invoiceLines.clear();
+        for (Map.Entry<String, InvoiceHeader> entry : invoiceHeaders.entrySet()) {
+            float total = 0;
+            ArrayList<InvoiceLine> ils = new ArrayList<>();
+            for (InvoiceLine il : invoiceLines) {
+                if (il.getId().equals(entry.getKey())) {
+                    total = total + Float.valueOf(il.getItemTotal());
+                    ils.add(il);
+                }
+            }
+            entry.getValue().setInvoiceLines(ils);
+            entry.getValue().setTotal(Float.toString(total));
 
+            String tableRow[] = {entry.getValue().getId(), entry.getValue().getDate(), entry.getValue().getCustomer(), Float.toString(total)};
+            dtm.addRow(tableRow);
+        }
+    }
+
+    public int getSelectedInvoiceRow() {
+        return tableInvoices.getSelectedRow();
+    }
+
+    public int getSelectedInvoiceRowCount() {
+        return ((DefaultTableModel) tableInvoiceItems.getModel()).getRowCount();
+    }
+
+    public String getSelectedInvoiceId(int rowIndex) {
+        return (String) tableInvoices.getModel().getValueAt(rowIndex, 0);
+    }
+
+    public void setInvoiceValue(Object val, int row, int column) {
+        DefaultTableModel dt = (DefaultTableModel) tableInvoices.getModel();
+        dt.setValueAt(val, row, column);
+    }
+
+    public void addInvoice(String id) {
+        DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
+        String row[] = {id};
+        dtm.addRow(row);
+    }
+
+    public void deleteInvoice(int rowIndex) {
+        DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
+        dtm.removeRow(rowIndex);
         textFieldInvoiceNumber.setText("");
         textFieldInvoiceDate.setText("");
         textFieldCustomer.setText("");
         textFieldInvoiceTotal.setText("");
         ((DefaultTableModel) tableInvoiceItems.getModel()).setRowCount(0);
-
-        try {
-
-            BufferedReader br = new BufferedReader(new FileReader(invoicesPath));
-            while ((line = br.readLine()) != null) //returns a Boolean value  
-            {
-                String[] row = line.split(splitBy);
-
-                InvoiceHeader ih = new InvoiceHeader(row[0], row[1], row[2]);
-
-                invoiceHeaders.put(ih.getId(), ih);
-            }
-            br.close();
-
-            BufferedReader brInvoiceLine = new BufferedReader(new FileReader(invoicesItemsPath));
-            while ((line = brInvoiceLine.readLine()) != null) //returns a Boolean value  
-            {
-                String[] row = line.split(splitBy);
-                InvoiceLine il = new InvoiceLine(row[0], row[1], row[2]);
-                il.setItemCount(row[3]);
-                float itemTotal = Integer.valueOf(il.getItemCount()) * Float.valueOf(il.getItemPrice());
-                il.setItemTotal(Float.toString(itemTotal));
-                invoiceLines.add(il);
-            }
-            brInvoiceLine.close();
-
-            DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
-            dtm.setRowCount(0);
-
-            for (Map.Entry<String, InvoiceHeader> entry : invoiceHeaders.entrySet()) {
-                float total = 0;
-                ArrayList<InvoiceLine> ils = new ArrayList<>();
-                for (InvoiceLine il : invoiceLines) {
-                    if (il.getId().equals(entry.getKey())) {
-                        total = total + Float.valueOf(il.getItemTotal());
-                        ils.add(il);
-                    }
-                }
-                entry.getValue().setInvoiceLines(ils);
-                entry.getValue().setTotal(Float.toString(total));
-
-                String tableRow[] = {entry.getValue().getId(), entry.getValue().getDate(), entry.getValue().getCustomer(), Float.toString(total)};
-                dtm.addRow(tableRow);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_loadMenuItemActionPerformed
-
-    private void buttonCreateInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateInvoiceActionPerformed
-        DefaultTableModel dtm = (DefaultTableModel) tableInvoices.getModel();
-        // TODO : get max id val
-        int rowCount = dtm.getRowCount();
-        String row[] = {Integer.toString(rowCount + 1)};
-        dtm.addRow(row);
-    }//GEN-LAST:event_buttonCreateInvoiceActionPerformed
-
-    private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
-        // TODO add your handling code here:
-        String invoiceNumber = textFieldInvoiceNumber.getText();
-        String invoiceDate = textFieldInvoiceDate.getText();
-        String customerName = textFieldCustomer.getText();
-        DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
-        int rowCount = dtm.getRowCount();
-        if (invoiceNumber.isBlank() || invoiceDate.isBlank() || customerName.isBlank() || rowCount < 1) {
-            JOptionPane.showMessageDialog(rootPane, "Invalid Data");
-            return;
-        }
-
-        // construct invoice lines
-        float total = 0;
-        InvoiceHeader ihNew = new InvoiceHeader(invoiceNumber, invoiceDate, customerName);
-        ArrayList<InvoiceLine> ilsNew = new ArrayList<>();
-        for (int i = 0; i < rowCount; i++) {
-            try {
-                if (dtm.getValueAt(i, 1) == null || dtm.getValueAt(i, 2) == null || dtm.getValueAt(i, 3) == null) {
-                    JOptionPane.showMessageDialog(rootPane, "Invalid Data");
-                    return;
-                }
-                String itemName = (String) dtm.getValueAt(i, 1);
-                String itemPrice = (String) dtm.getValueAt(i, 2);
-                String itemCount = (String) dtm.getValueAt(i, 3);
-                float itemTotal = Integer.valueOf(itemCount) * Float.valueOf(itemPrice);
-                total += itemTotal;
-                InvoiceLine ilNew = new InvoiceLine(invoiceNumber, itemName, itemPrice);
-                ilNew.setItemCount(itemCount);
-                ilNew.setItemTotal(Float.toString(itemTotal));
-                ilsNew.add(ilNew);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "Invalid Data");
-                return;
-            }
-        }
-
-        int rowIndex = tableInvoices.getSelectedRow();
-        if (rowIndex != -1) {
-            DefaultTableModel dtmInv = (DefaultTableModel) tableInvoices.getModel();
-            dtmInv.setValueAt(invoiceNumber, rowIndex, 0);
-            dtmInv.setValueAt(invoiceDate, rowIndex, 1);
-            dtmInv.setValueAt(customerName, rowIndex, 2);
-            dtmInv.setValueAt(Float.toString(total), rowIndex, 3);
-
-            ihNew.setTotal(Float.toString(total));
-            ihNew.setInvoiceLines(ilsNew);
-            invoiceHeaders.put(invoiceNumber, ihNew);
-            showSelectedInvoice();
-            JOptionPane.showMessageDialog(rootPane, "Invoice Saved Successfuly");
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "No Selected Row");
-        }
-    }//GEN-LAST:event_buttonSaveActionPerformed
-
-    private void buttonAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddItemActionPerformed
-        if (!textFieldInvoiceNumber.getText().isBlank()) {
-            DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
-            String row[] = {textFieldInvoiceNumber.getText()};
-            dtm.addRow(row);
-        }
-    }//GEN-LAST:event_buttonAddItemActionPerformed
-
-    private void buttonRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveItemActionPerformed
-        int rowIndex = tableInvoiceItems.getSelectedRow();
-        if (rowIndex != -1) {
-            DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
-            dtm.removeRow(rowIndex);
-        }
-    }//GEN-LAST:event_buttonRemoveItemActionPerformed
-
-    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
-        showSelectedInvoice();
-    }//GEN-LAST:event_buttonCancelActionPerformed
-
-    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-
-        try {
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("*.csv", "csv");
-            JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(filter);
-
-            String invoicesPath = "";
-            String invoicesItemsPath = "";
-
-            JOptionPane.showMessageDialog(rootPane, "Save Invoice Header");
-
-            int response = fc.showSaveDialog(rootPane);
-            if (response != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            invoicesPath = fc.getSelectedFile().getCanonicalPath();
-
-            JOptionPane.showMessageDialog(rootPane, "Save Invoice Line");
-
-            int response2 = fc.showSaveDialog(rootPane);
-            if (response2 != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            invoicesItemsPath = fc.getSelectedFile().getCanonicalPath();
-
-            if (invoiceHeaders.isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "No Invoices To Save");
-                return;
-            }
-
-            FileWriter ihw = new FileWriter(invoicesPath);
-            FileWriter ilw = new FileWriter(invoicesItemsPath);
-
-            for (Map.Entry<String, InvoiceHeader> e : invoiceHeaders.entrySet()) {
-                ihw.write(e.getKey() + "," + e.getValue().getDate() + "," + e.getValue().getCustomer() + "\n");
-                for (InvoiceLine i : e.getValue().getInvoiceLines()) {
-                    ilw.write(i.getId() + "," + i.getItemName() + "," + i.getItemPrice() + "," + i.getItemCount() + "\n");
-                }
-            }
-
-            ihw.close();
-            ilw.close();
-
-            JOptionPane.showMessageDialog(rootPane, "Invoices Saved Successfully");
-
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Failed To Save Invoices");
-        }
-    }//GEN-LAST:event_saveMenuItemActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new SalesApp().setVisible(true);
-        });
     }
 
-    private void showSelectedInvoice() {
+    public void showInvoiceDetails(InvoiceHeader ih) {
         int rowIndex = tableInvoices.getSelectedRow();
         if (rowIndex != -1) {
 
@@ -629,7 +427,6 @@ public class SalesApp extends javax.swing.JFrame {
             textFieldCustomer.setText(customerName);
             textFieldInvoiceTotal.setText(invoiceTotal);
 
-            InvoiceHeader ih = invoiceHeaders.get(invoiceNumber);
             DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
             if (ih != null) {
                 ArrayList<InvoiceLine> ils = ih.getInvoiceLines();
@@ -649,9 +446,89 @@ public class SalesApp extends javax.swing.JFrame {
         }
     }
 
-    private LinkedHashMap<String, InvoiceHeader> invoiceHeaders = new LinkedHashMap<>();
-    private ArrayList<InvoiceLine> invoiceLines = new ArrayList<>();
+    public void AddItem() {
+        if (!textFieldInvoiceNumber.getText().isBlank()) {
+            DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
+            String row[] = {textFieldInvoiceNumber.getText()};
+            dtm.addRow(row);
+        }
+    }
 
+    public void removeItem() {
+        int rowIndex = tableInvoiceItems.getSelectedRow();
+        if (rowIndex != -1) {
+            DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
+            dtm.removeRow(rowIndex);
+        }
+    }
+
+    public Object getInvoiceItemDetail(int row, int column) {
+        DefaultTableModel dtm = (DefaultTableModel) tableInvoiceItems.getModel();
+        return dtm.getValueAt(row, column);
+    }
+
+    public void clearInvoiceDetails() {
+        textFieldInvoiceNumber.setText("");
+        textFieldInvoiceDate.setText("");
+        textFieldCustomer.setText("");
+        textFieldInvoiceTotal.setText("");
+        ((DefaultTableModel) tableInvoiceItems.getModel()).setRowCount(0);
+    }
+
+    /**
+     * ******* Variables geters ********
+     */
+    public JButton getButtonAddItem() {
+        return buttonAddItem;
+    }
+
+    public JButton getButtonRemoveItem() {
+        return buttonRemoveItem;
+    }
+
+    public JButton getButtonSave() {
+        return buttonSave;
+    }
+
+    public JButton getButtonCancel() {
+        return buttonCancel;
+    }
+
+    public JButton getButtonCreateInvoice() {
+        return buttonCreateInvoice;
+    }
+
+    public JButton getButtonDeleteInvoice() {
+        return buttonDeleteInvoice;
+    }
+
+    public JMenuItem getMenuItemLoad() {
+        return menuItemLoad;
+    }
+
+    public JMenuItem getMenuItemSave() {
+        return menuItemSave;
+    }
+
+    public JTable getTableInvoices() {
+        return tableInvoices;
+    }
+
+    public JTextField getTextFieldCustomer() {
+        return textFieldCustomer;
+    }
+
+    public JTextField getTextFieldInvoiceDate() {
+        return textFieldInvoiceDate;
+    }
+
+    public JTextField getTextFieldInvoiceNumber() {
+        return textFieldInvoiceNumber;
+    }
+
+    public JTextField getTextFieldInvoiceTotal() {
+        return textFieldInvoiceTotal;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddItem;
@@ -669,12 +546,12 @@ public class SalesApp extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelInvoiceNumber;
     private javax.swing.JLabel labelInvoices;
-    private javax.swing.JMenuItem loadMenuItem;
+    private javax.swing.JMenuItem menuItemLoad;
+    private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JPanel panelInvoiceItems;
     private javax.swing.JPanel panelLeft;
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelRight;
-    private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JTable tableInvoiceItems;
     private javax.swing.JTable tableInvoices;
     private javax.swing.JTextField textFieldCustomer;

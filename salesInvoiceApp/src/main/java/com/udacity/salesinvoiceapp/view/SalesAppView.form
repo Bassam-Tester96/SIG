@@ -9,21 +9,15 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="loadMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemLoad">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadMenuItemActionPerformed"/>
-              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="saveMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemSave">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMenuItemActionPerformed"/>
-              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -200,17 +194,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Create New Invoice"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCreateInvoiceActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="buttonDeleteInvoice">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete Invoice"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonDeleteInvoiceActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -399,9 +387,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Add Item"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAddItemActionPerformed"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="buttonRemoveItem">
                   <Properties>
@@ -410,9 +395,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Remove Item"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonRemoveItemActionPerformed"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -440,17 +422,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSaveActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="buttonCancel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cancel"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCancelActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="textFieldInvoiceDate">
             </Component>

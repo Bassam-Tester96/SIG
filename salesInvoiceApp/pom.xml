@@ -19,7 +19,7 @@
                 <configuration>
                   <archive>
                     <manifest>
-                        <mainClass>com.udacity.salesinvoiceapp.SalesApp</mainClass>
+                        <mainClass>com.udacity.salesinvoiceapp.SalesAppMain</mainClass>
                     </manifest>
                   </archive>
                 </configuration>
